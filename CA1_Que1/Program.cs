@@ -35,42 +35,17 @@ public class MainProgram
                 Console.Write("Enter Birthdate (yyyy-mm-dd): ");
                 DateTime birthdate = DateTime.Parse(Console.ReadLine());
 
-                Contact newContact = new Contact(firstName, lastName, company, mobileNumber, email, birthdate);
-                myContactBook.AddContact(newContact);
+                
             }
             else if (choice == 2)
             {
-                myContactBook.ShowAllContacts(); 
-            
-                Console.Write("Enter the number of the contact to update: ");
-                int selectedNumber = Convert.ToInt32(Console.ReadLine());
+                
 
-                // Gather new contact details
-                Console.Write("Enter New First Name: ");
-                string firstName = Console.ReadLine();
-                Console.Write("Enter New Last Name: ");
-                string lastName = Console.ReadLine();
-                Console.Write("Enter New Company: ");
-                string company = Console.ReadLine();
-                Console.Write("Enter New Mobile Number: ");
-                string mobileNumber = Console.ReadLine();
-                Console.Write("Enter New Email: ");
-                string email = Console.ReadLine();
-                Console.Write("Enter New Birthdate (yyyy-mm-dd): ");
-                DateTime birthdate = DateTime.Parse(Console.ReadLine());
-
-                Contact updatedContact = new Contact(firstName, lastName, company, mobileNumber, email, birthdate);
-                myContactBook.UpdateContact(selectedNumber, updatedContact); // Update the contact
-            }
-            else if (choice == 4) // Delete Contact
-            {
-                Console.Write("Enter the number of the contact to delete: ");
-                int selectedNumber = Convert.ToInt32(Console.ReadLine());
-                myContactBook.DeleteContact(selectedNumber); // Delete the contact
+                
             }
             else if (choice == 5)
             {
-                myContactBook.ShowContactCount(); // Show the total number of contacts
+               
             }
             else if (choice == 0)
             {
