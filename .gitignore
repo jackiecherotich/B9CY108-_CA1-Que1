@@ -1,0 +1,17 @@
+# Ignore build output folders
+bin/
+obj/
+
+# Ignore temporary files
+*.user
+*.suo
+*.tmp
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Rider/VS settings
+.idea/
+
+# Ignore any build cache
+*.cache

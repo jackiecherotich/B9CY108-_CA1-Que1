@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "CA1n_Que2/1.0.0": {
+        "runtime": {
+          "CA1n_Que2.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CA1n_Que2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
