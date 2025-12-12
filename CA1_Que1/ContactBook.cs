@@ -1,141 +1,292 @@
-// Contact Book Class
+// Contact Book Class - Stores and manages all contacts
 using System;
 using System.Collections.Generic;
+using ConsoleTables;
 
 public class ContactBook
 {
-    private List<Contact> _contacts = new List<Contact>();
+    // List to store Contact objects
+    private List<Contact> contacts = new List<Contact>();
 
+     //..................Adding contacts-------------------------//
+       public ContactBook()
+    {
+        AddingSampleContacts();   // load sample data
+    }
 
-    // Adding Contact
     public void AddContact(Contact newContact)
     {
-        _contacts.Add(newContact);
+        
+        contacts.Add(newContact);
         Console.WriteLine("Contact added successfully.");
     }
 
 
-    // Displaying all contacts
+    // .............Display all contacts.......................//
     public void ShowAllContacts()
     {
-        if (_contacts.Count == 0)
+        if (contacts.Count == 0)
         {
             Console.WriteLine("No contacts available.");
             return;
         }
 
-        foreach (Contact contact in _contacts)
-            contact.Show();
+        var table = new ConsoleTable("First Name", "Last Name", "Company",
+                                     "Mobile", "Email", "Birthdate");
+
+        foreach (var c in contacts)
+        {
+            table.AddRow(
+                c.FirstName,
+                c.LastName,
+                c.Company,
+                c.MobileNumber,
+                c.Email,
+                c.BirthDate.ToString("dd/MM/yyyy")
+            );
+        }
+
+        table.Write(Format.Alternative);
     }
 
 
-    // Showing Contact Details
-    public void ShowContactDetails(string mobile)
+    // .......Search contacts using email or mobile number.....//
+    public Contact SearchContact(string email)
     {
-        bool isFound = false;
-        Contact foundContact = null;
+        foreach (var c in contacts)
+            if (c.Email == email)
+                return c;
 
-        foreach (Contact item in _contacts)
+        return null;
+    }
+
+    public Contact SearchContact(long mobile)
+    {
+        foreach (var c in contacts)
+            if (c.MobileNumber == mobile.ToString())
+                return c;
+
+        return null;
+    }
+
+
+    // .............Showing Details of a specific contact.......//
+    public void ShowContactDetails(Contact contact)
+    {
+        if (contact == null)
+            Console.WriteLine("Contact not found.");
+            
+        else
+        contact.Show();
+    }
+
+
+    // ..............Updating Contact Details..................//
+    public void UpdateContact()
+    {
+        Console.WriteLine("\nSearch contact by:");
+        Console.WriteLine("1. Mobile Number");
+        Console.WriteLine("2. Email");
+        Console.Write("Please type the options: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int choice))
         {
-            if (item.MobileNumber == mobile)
-            {
-                foundContact = item;
-                isFound = true;
-                break;
-            }
+            Console.WriteLine("Invalid choice.");
+            return;
         }
 
-        if (!isFound)
+        Contact found = null;
+
+        if (choice == 1)
+        {
+            Console.Write("Enter mobile number: ");
+            string mobileInput = Console.ReadLine();
+
+            if (!long.TryParse(mobileInput, out long mobile))
+            {
+                Console.WriteLine("Invalid mobile number!");
+                return;
+            }
+
+            found = SearchContact(mobile);
+        }
+        else if (choice == 2)
+        {
+            Console.Write("Enter email: ");
+            string email = Console.ReadLine();
+
+            found = SearchContact(email);
+        }
+        else
+        {
+            Console.WriteLine("Invalid choice.");
+            return;
+        }
+
+        if (found == null)
         {
             Console.WriteLine("Contact not found.");
             return;
         }
 
-        foundContact.Show();
-    }
+        Console.WriteLine("\nContact Found:");
+        ShowContactDetails(found);
 
+        // Ask user what to update
+        Console.WriteLine("\nWhich detail do you want to update?");
+        Console.WriteLine("1. First Name");
+        Console.WriteLine("2. Last Name");
+        Console.WriteLine("3. Company");
+        Console.WriteLine("4. Mobile Number");
+        Console.WriteLine("5. Email");
+        Console.WriteLine("6. Birthdate");
+        Console.Write("Please enter the option to update: ");
 
-    // To Update Contact
-    public void UpdateContact(string mobile)
-    {
-        bool isFound = false;
-        Contact foundContact = null;
-
-        foreach (Contact item in _contacts)
-        {
-            if (item.MobileNumber == mobile)
-            {
-                foundContact = item;
-                isFound = true;
-                break;
-            }
-        }
-
-        if (!isFound)
-        {
-            Console.WriteLine("Contact not found.");
-            return;
-        }
-
+        int.TryParse(Console.ReadLine(), out int field);
+ 
         try
         {
-            Console.Write("New First Name: ");
-            foundContact.FirstName = Console.ReadLine();
+            switch (field)
+            {
+                case 1:
+                    Console.Write(" First Name: ");
+                    found.FirstName = Console.ReadLine();
+                    break;
 
-            Console.Write("New Last Name: ");
-            foundContact.LastName = Console.ReadLine();
+                case 2:
+                    Console.Write(" Last Name: ");
+                    found.LastName = Console.ReadLine();
+                    break;
 
-            Console.Write("New Company: ");
-            foundContact.Company = Console.ReadLine();
+                case 3:
+                    Console.Write("Company: ");
+                    found.Company = Console.ReadLine();
+                    break;
 
-            Console.Write("New Mobile Number: ");
-            foundContact.MobileNumber = Console.ReadLine();
+                case 4:
+                    Console.Write(" Mobile Number: ");
+                    found.MobileNumber = Console.ReadLine();
+                    break;
 
-            Console.Write("New Email: ");
-            foundContact.Email = Console.ReadLine();
+                case 5:
+                    Console.Write("Email: ");
+                    found.Email = Console.ReadLine();
+                    break;
 
-            Console.Write("New Birthdate (yyyy-mm-dd): ");
-            foundContact.Birthdate = DateTime.Parse(Console.ReadLine());
+                case 6:
+                    Console.Write("Birthdate (yyyy-mm-dd): ");
+                    found.BirthDate = DateTime.Parse(Console.ReadLine());
+                    break;
 
-            Console.WriteLine("Contact updated successfully.");
+                default:
+                    Console.WriteLine("Invalid selection.");
+                    return;
+            }
+
+            Console.WriteLine("Contact updated successfully!");
+            Console.WriteLine("\nUpdated Contact Details:");
+            ShowContactDetails(found);
+
         }
-        catch (Exception ex)
+        catch (Exception )
         {
-            Console.WriteLine("Error updating contact: " + ex.Message);
+            Console.WriteLine($"Contact details Update failed");
         }
     }
 
 
-    //
-    public void DeleteContact(string mobile)
+    
+    // ...............Deleting Contact Details..................//
+    public void DeleteContact()
     {
-        bool isFound = false;
-        Contact foundContact = null;
+        Console.WriteLine("\nDelete contact by:");
+        Console.WriteLine("1. Mobile Number");
+        Console.WriteLine("2. Email");
+        Console.Write("Enter choice: ");
 
-        foreach (Contact item in _contacts)
+        int.TryParse(Console.ReadLine(), out int choice);
+  
+        Contact found = null;
+
+        if (choice == 1)
         {
-            if (item.MobileNumber == mobile)
+            Console.Write("Enter mobile number: ");
+            string mobileInput = Console.ReadLine();
+
+            if (!long.TryParse(mobileInput, out long mobile))
             {
-                foundContact = item;
-                isFound = true;
-                break;
+                Console.WriteLine("Invalid number.");
+                return;
             }
+
+            found = SearchContact(mobile);
+        }
+        else if (choice == 2)
+        {
+            Console.Write("Enter email: ");
+            string email = Console.ReadLine();
+            found = SearchContact(email);
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+            return;
         }
 
-        if (!isFound)
+        if (found == null)
         {
             Console.WriteLine("Contact not found.");
             return;
         }
 
-        _contacts.Remove(foundContact);
-        Console.WriteLine("Contact deleted.");
+        Console.WriteLine("\nContact to delete:");
+        ShowContactDetails(found);
+
+        Console.Write("\nConfirm delete? (Y/N): ");
+        string confirm = Console.ReadLine().ToUpper();
+
+        if (confirm == "Y")
+        {
+            contacts.Remove(found);
+            Console.WriteLine("Contact deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Delete cancelled.");
+        }
     }
 
 
-   
-    public int ContactCount()
+
+    // .............Sample Contact Details......................//
+    public void AddingSampleContacts()
     {
-        return _contacts.Count;
+        contacts.Add(new Contact("Emily", "Blackwell", "Dublin Business School",
+            "123456789", "emily.blackwell@dbs.ie", DateTime.Parse("1990-01-01")));
+
+        contacts.Add(new Contact("John", "Doe", "Tech Innovate",
+            "234567891", "john.doe@techinnovate.com", DateTime.Parse("1985-05-20")));
+
+        contacts.Add(new Contact("Sarah", "Walsh", "IT Solutions Ltd",
+            "345678912", "sarah.walsh@itsolutions.ie", DateTime.Parse("1993-03-12")));
+
+        contacts.Add(new Contact("Paul", "Murphy", "Finance Plus",
+            "456789123", "paul.murphy@financeplus.ie", DateTime.Parse("1988-02-14")));
+
+        contacts.Add(new Contact("Anna", "Kelly", "Retail Hub",
+            "567891234", "anna.kelly@retailhub.com", DateTime.Parse("1994-09-03")));
+
+        contacts.Add(new Contact("Mark", "Wilson", "Digital Innovations",
+            "678912345", "mark.wilson@digital.ie", DateTime.Parse("1989-07-07")));
+
+        contacts.Add(new Contact("Linda", "OBrien", "Education First",
+            "789123456", "linda.obrien@educationfirst.ie", DateTime.Parse("1992-04-27")));
+
+        contacts.Add(new Contact("Tom", "Hall", "Corp A",
+            "891234567", "tom.hall@corpa.com", DateTime.Parse("1991-06-10")));
+
+        contacts.Add(new Contact("Mia", "Lewis", "Corp B",
+            "912345678", "mia.lewis@corpb.com", DateTime.Parse("1996-11-22")));
+        
     }
 }

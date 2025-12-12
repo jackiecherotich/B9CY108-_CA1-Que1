@@ -1,88 +1,149 @@
-﻿// Main
-
+﻿// Program.cs
 using System;
 
-public class MainProgram
+public class Program
 {
     public static void Main(string[] args)
     {
-        ContactBook newContactBook = new ContactBook();
-        int choice = -1;
-
-        while (choice != 0)
+        ContactBook myContactBook = new ContactBook();
+        int option;
+      //..............Main Menu............................//
+        do
         {
-            Console.WriteLine(".....Main Menu..... ");
-            Console.WriteLine("1: Add Contact");
-            Console.WriteLine("2: Show All Contacts");
-            Console.WriteLine("3: Show Contact Details");
-            Console.WriteLine("4: Update Contact");
-            Console.WriteLine("5: Delete Contact");
-            Console.WriteLine("0: Exit");
-            Console.Write("Enter your choice: ");
+            Console.Title =  "Contact Book";
+            Console.WriteLine("\n.......MAIN MENU.......");
+            Console.WriteLine("1. Add Contact...........");
+            Console.WriteLine("2. Show All Contacts.....");
+            Console.WriteLine("3. Show Contact Details..");
+            Console.WriteLine("4. Update Contact........");
+            Console.WriteLine("5. Delete Contact........");
+            Console.WriteLine("0. Exit..................");
+            Console.WriteLine(".........................");
 
-            if (choice == 1)
+            Console.Write("Choose option: ");
+
+            int.TryParse(Console.ReadLine(), out option);
+
+            switch (option)
             {
-               
-                    Console.Write("First Name: ");
-                    string firstName = Console.ReadLine();
-
-                    Console.Write("Last Name: ");
-                    string lastName = Console.ReadLine();
-
-                    Console.Write("Company: ");
-                    string company = Console.ReadLine();
-
-                    Console.Write("Mobile Number (9 digits): ");
-                    string mobileNumber = Console.ReadLine();
-
-                    Console.Write("Email: ");
-                    string email = Console.ReadLine();
-
-                    Console.Write("Birthdate (yyyy-mm-dd): ");
-                    DateTime birthDate = DateTime.Parse(Console.ReadLine());
-
-                    Contact newContact = new Contact(firstName, lastName, company, mobileNumber, email, birthDate);
-                    newContactBook.AddContact(newContact);
-                
-               
+                case 1:
+                    AddContactMenu(myContactBook);
+                    break;
+                case 2:
+                    myContactBook.ShowAllContacts();
+                    break;
+                case 3:
+                    ShowUpdateDetailsMenu(myContactBook);
+                    break;
+                case 4:
+                    myContactBook.UpdateContact();
+                    break;
+                case 5:
+                    myContactBook.DeleteContact();
+                    break;
+                case 0:
+                    Console.WriteLine("Exiting program...");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice.");
+                    break;
             }
 
-            // Show All contact
-            else if (choice == 2)
-            {
-                newContactBook.ShowAllContacts();
-            }
+        } while (option != 0);
+    }
 
-            // Show Selected Contact
-            else if (choice == 3)
-            {
-                Console.Write("Enter Mobile Number: ");
-                newContactBook.ShowContactDetails(Console.ReadLine());
-            }
 
-            // Update Contact
-            else if (choice == 4)
-            {
-                Console.Write("Enter Mobile Number to update: ");
-                newContactBook.UpdateContact(Console.ReadLine());
-            }
+    // ----------------Adding Details Menu  ---------------- //
+    static void AddContactMenu(ContactBook myContactBook)
+    {
+        try
+        {
+            Console.Write("First Name: ");
+            string first = Console.ReadLine();
 
-            // Delete contact
-            else if (choice == 5)
-            {
-                Console.Write("Enter Mobile Number to delete: ");
-                newContactBook.DeleteContact(Console.ReadLine());
-            }
+            Console.Write("Last Name: ");
+            string last = Console.ReadLine();
 
-            // Exit
-            else if (choice == 0)
-            {
-                Console.WriteLine("Exiting.Goodbye!");
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice.");
-            }
+            Console.Write("Company: ");
+            string company = Console.ReadLine();
+
+            Console.Write("Mobile (9 digits): ");
+            string mobile = Console.ReadLine();
+
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+
+            Console.Write("Birthdate (yyyy-mm-dd): ");
+            DateTime birthdate = DateTime.Parse(Console.ReadLine());
+
+            Contact ncontact = new Contact(first, last, company, mobile, email, birthdate);
+
+            Console.WriteLine("\nReview Details:");
+            ncontact.Show();
+
+            Console.Write("Save contact? (Y/N): ");
+            if (Console.ReadLine().ToUpper() == "Y")
+                myContactBook.AddContact(ncontact);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
+    // ----------------UpdateDetails Menu ---------------- //
+    static void ShowUpdateDetailsMenu(ContactBook myContactBook)
+    {
+        Console.WriteLine("\nSearch by:.....");
+        Console.WriteLine("1. Mobile........");
+        Console.WriteLine("2. Email.........");
+        Console.WriteLine(".................");
+        Console.Write("\nEnter your choice: ");
+        string optionInput = Console.ReadLine();
+         
+        if (!int.TryParse(optionInput, out int choice))
+        {
+        Console.WriteLine("Invalid choice.");
+        return;
+        }
+         
+
+        Contact found = null;
+         if (choice == 1)
+    {
+        Console.Write("\nEnter Mobile Number:");
+        string mobileInput = Console.ReadLine();
+
+        if (!long.TryParse(mobileInput, out long mobile))
+        {
+            Console.WriteLine("Invalid mobile number.");
+            return;
+        }
+
+        found = myContactBook.SearchContact(mobile);
+    }
+    else if (choice == 2)
+    {
+        Console.Write("\nEnter Email Address:");
+        string email = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            Console.WriteLine("Invalid email.");
+            return;
+        }
+
+        found = myContactBook.SearchContact(email);
+    }
+    else
+    {
+        Console.WriteLine("Invalid option.");
+        return;
+    }
+
+    Console.WriteLine(); 
+    myContactBook.ShowContactDetails(found);
 }
+}
+
+        
