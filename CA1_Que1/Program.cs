@@ -101,7 +101,7 @@ public class Program
         Console.Write("\nEnter your choice: ");
         string optionInput = Console.ReadLine();
          
-        if (!int.TryParse(optionInput, out int choice))
+        if (!int.TryParse(optionInput, out int searchOption))
         {
         Console.WriteLine("Invalid choice.");
         return;
@@ -109,7 +109,7 @@ public class Program
          
 
         Contact found = null;
-         if (choice == 1)
+         if (searchOption == 1)
     {
         Console.Write("\nEnter Mobile Number:");
         string mobileInput = Console.ReadLine();
@@ -122,7 +122,7 @@ public class Program
 
         found = myContactBook.SearchContact(mobile);
     }
-    else if (choice == 2)
+    else if (searchOption == 2)
     {
         Console.Write("\nEnter Email Address:");
         string email = Console.ReadLine();
