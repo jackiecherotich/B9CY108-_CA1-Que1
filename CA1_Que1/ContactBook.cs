@@ -8,7 +8,7 @@ public class ContactBook
     // List to store Contact objects
     private List<Contact> contacts = new List<Contact>();
 
-     //..................Adding contacts-------------------------//
+     //Adding Sample contacts
        public ContactBook()
     {
         AddingSampleContacts();   // load sample data
@@ -22,7 +22,7 @@ public class ContactBook
     }
 
 
-    // .............Display all contacts.......................//
+    // Displaying All contacts
     public void ShowAllContacts()
     {
         if (contacts.Count == 0)
@@ -50,7 +50,7 @@ public class ContactBook
     }
 
 
-    // .......Search contacts using email or mobile number.....//
+    // Searching with email and mobile number
     public Contact SearchContact(string email)
     {
         foreach (var c in contacts)
@@ -70,7 +70,7 @@ public class ContactBook
     }
 
 
-    // .............Showing Details of a specific contact.......//
+    // Showing details of a specific contact
     public void ShowContactDetails(Contact contact)
     {
         if (contact == null)
@@ -87,17 +87,17 @@ public class ContactBook
         Console.WriteLine("\nSearch contact by:");
         Console.WriteLine("1. Mobile Number");
         Console.WriteLine("2. Email");
-        Console.Write("Please type the options: ");
+        Console.Write("Please type the options you like to use: ");
 
-        if (!int.TryParse(Console.ReadLine(), out int choice))
+        if (!int.TryParse(Console.ReadLine(), out int userChoice))
         {
             Console.WriteLine("Invalid choice.");
             return;
         }
 
-        Contact found = null;
+       Contact targetContact  = null;
 
-        if (choice == 1)
+        if (userChoice == 1)
         {
             Console.Write("Enter mobile number: ");
             string mobileInput = Console.ReadLine();
@@ -108,14 +108,14 @@ public class ContactBook
                 return;
             }
 
-            found = SearchContact(mobile);
+            targetContact = SearchContact(mobile);
         }
-        else if (choice == 2)
+        else if (userChoice == 2)
         {
             Console.Write("Enter email: ");
             string email = Console.ReadLine();
 
-            found = SearchContact(email);
+            targetContact = SearchContact(email);
         }
         else
         {
@@ -123,14 +123,14 @@ public class ContactBook
             return;
         }
 
-        if (found == null)
+        if (targetContact == null)
         {
             Console.WriteLine("Contact not found.");
             return;
         }
 
         Console.WriteLine("\nContact Found:");
-        ShowContactDetails(found);
+        ShowContactDetails(targetContact);
 
         // Ask user what to update
         Console.WriteLine("\nWhich detail do you want to update?");
@@ -142,40 +142,38 @@ public class ContactBook
         Console.WriteLine("6. Birthdate");
         Console.Write("Please enter the option to update: ");
 
-        int.TryParse(Console.ReadLine(), out int field);
+        int.TryParse(Console.ReadLine(), out int fieldToUpdate);
  
         try
         {
-            switch (field)
+            switch (fieldToUpdate)
             {
                 case 1:
                     Console.Write(" First Name: ");
-                    found.FirstName = Console.ReadLine();
+                    targetContact.FirstName = Console.ReadLine();
                     break;
-
                 case 2:
                     Console.Write(" Last Name: ");
-                    found.LastName = Console.ReadLine();
+                    targetContact.LastName = Console.ReadLine();
                     break;
 
                 case 3:
                     Console.Write("Company: ");
-                    found.Company = Console.ReadLine();
+                    targetContact.Company = Console.ReadLine();
                     break;
-
                 case 4:
                     Console.Write(" Mobile Number: ");
-                    found.MobileNumber = Console.ReadLine();
+                    targetContact.MobileNumber = Console.ReadLine();
                     break;
 
                 case 5:
                     Console.Write("Email: ");
-                    found.Email = Console.ReadLine();
+                    targetContact.Email = Console.ReadLine();
                     break;
 
                 case 6:
                     Console.Write("Birthdate (yyyy-mm-dd): ");
-                    found.BirthDate = DateTime.Parse(Console.ReadLine());
+                    targetContact.BirthDate = DateTime.Parse(Console.ReadLine());
                     break;
 
                 default:
@@ -185,7 +183,7 @@ public class ContactBook
 
             Console.WriteLine("Contact updated successfully!");
             Console.WriteLine("\nUpdated Contact Details:");
-            ShowContactDetails(found);
+            ShowContactDetails(targetContact);
 
         }
         catch (Exception )
@@ -204,11 +202,11 @@ public class ContactBook
         Console.WriteLine("2. Email");
         Console.Write("Enter choice: ");
 
-        int.TryParse(Console.ReadLine(), out int choice);
+        int.TryParse(Console.ReadLine(), out int fieldToSearchWith);
   
-        Contact found = null;
+        Contact targetContact = null;
 
-        if (choice == 1)
+        if (fieldToSearchWith == 1)
         {
             Console.Write("Enter mobile number: ");
             string mobileInput = Console.ReadLine();
@@ -219,13 +217,14 @@ public class ContactBook
                 return;
             }
 
-            found = SearchContact(mobile);
+            targetContact = SearchContact(mobile);
         }
-        else if (choice == 2)
+
+        else if (fieldToSearchWith == 2)
         {
             Console.Write("Enter email: ");
             string email = Console.ReadLine();
-            found = SearchContact(email);
+            targetContact = SearchContact(email);
         }
         else
         {
@@ -233,21 +232,21 @@ public class ContactBook
             return;
         }
 
-        if (found == null)
+        if (targetContact == null)
         {
             Console.WriteLine("Contact not found.");
             return;
         }
 
         Console.WriteLine("\nContact to delete:");
-        ShowContactDetails(found);
+        ShowContactDetails(targetContact);
 
         Console.Write("\nConfirm delete? (Y/N): ");
         string confirm = Console.ReadLine().ToUpper();
 
         if (confirm == "Y")
         {
-            contacts.Remove(found);
+            contacts.Remove(targetContact);
             Console.WriteLine("Contact deleted successfully.");
         }
         else
